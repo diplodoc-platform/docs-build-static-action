@@ -1,0 +1,54 @@
+name: docs-build-static-action
+description: Build documentation
+
+inputs:
+  src-root:
+    default: "./"
+  build-root:
+    default: "./_site"
+
+runs:
+  using: composite
+  steps:
+    - uses: actions/setup-node@v3
+      with:
+        node-version: 18
+    - name: Setup Pages
+      uses: actions/configure-pages@v4
+    - run: npm i @diplodoc/cli -g
+      shell: bash
+    - name: Build _site
+      id: build-html
+      run: |
+        set +e
+        set -o pipefail
+
+        yfm -i ${{ inputs.src-root }} -o ${{ inputs.build-root }} | tee './build.log'
+
+        echo "exitcode=$?" >> $GITHUB_OUTPUT
+
+      shell: bash
+    - name: Upload build log
+      uses: actions/upload-artifact@v3
+      with:
+        name: build-log-html
+        path: ./build.log
+        retention-days: 1
+    - name: Upload pages artifact
+      uses: actions/upload-pages-artifact@v3
+      with:
+        path: ${{ inputs.build-root }}
+    - name: Deploy to GitHub Pages
+      id: deployment
+      uses: actions/deploy-pages@v4
+    - name: Exit
+      run: |
+        exitcode=${{ steps.build-html.outputs.exitcode }}
+
+        if [ "$exitcode" -eq 0 ]; then
+            echo "Build exited successfully."
+        else
+          echo "Build exited with an error. Exit code: $exitcode"
+          exit $exitcode
+        fi
+      shell: bash
