@@ -7,7 +7,7 @@ This GitHub action does two things:
 ## Inputs
 
 - `src-root` (default: `./`) - The root directory where the source documentation files are located. The action will use this directory as the base location to look for the source files that need to be built.
-- `build-root` (default: `./_docs-build`) - The root directory for the built documentation. This is an optional parameter, and if not specified, the default value will be used.
+- `build-root` (default: `./_site`) - The root directory for the built documentation. This is an optional parameter, and if not specified, the default value will be used.
 
 ## Usage
 
