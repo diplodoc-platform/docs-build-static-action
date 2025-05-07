@@ -1,11 +1,19 @@
 name: docs-build-static-action
-description: Build documentation
+description: Build HTML documentation for static hosting
 
 inputs:
   src-root:
+    description: "Source directory with markdown files"
     default: "./"
   build-root:
+    description: "Output directory for HTML files"
     default: "./_site"
+  single-page:
+    description: "Generate single page for PDF (true/false)"
+    default: "false"
+  auto-deploy:
+    description: "Automatically deploy to GitHub Pages (true/false)"
+    default: "true"
 
 runs:
   using: composite
@@ -13,34 +21,81 @@ runs:
     - uses: actions/setup-node@v3
       with:
         node-version: 18
+
     - name: Setup Pages
+      if: inputs.auto-deploy == 'true'
       uses: actions/configure-pages@v4
+
     - run: npm i @diplodoc/cli -g
       shell: bash
-    - name: Build _site
+
+    - name: Check for PDF config
+      id: get-pdf-config
+      run: |
+        pdf_args=''
+        
+        # Check if single-page input is set to true
+        if [[ "${{ inputs.single-page }}" == "true" ]]; then
+          pdf_args='--single-page'
+        # If not explicitly set, check yfm config
+        elif [[ -e "${{ inputs.src-root }}/.yfm" ]]; then
+          need_pdf=$(yq -r '.docs-viewer.pdf // false' < ${{ inputs.src-root }}/.yfm)
+          if [[ "$need_pdf" == 'true' ]]; then
+            pdf_args='--single-page'
+          fi
+        fi
+        
+        echo "pdf_args=$pdf_args" >> $GITHUB_OUTPUT
+      shell: bash
+
+    - name: Build HTML
       id: build-html
       run: |
         set +e
         set -o pipefail
 
-        yfm -i ${{ inputs.src-root }} -o ${{ inputs.build-root }} | tee './build.log'
+        yfm -i ${{ inputs.src-root }} -o ${{ inputs.build-root }} ${{ steps.get-pdf-config.outputs.pdf_args }} | tee './build.log'
 
         echo "exitcode=$?" >> $GITHUB_OUTPUT
-
       shell: bash
+
+    - name: Generate PDF
+      if: steps.get-pdf-config.outputs.pdf_args != ''
+      shell: bash
+      run: |
+        set +e
+        set -o pipefail
+
+        npx -y -- @diplodoc/pdf-generator@latest -i ${{ inputs.build-root }}
+        
+        echo "PDF files generated"
+
     - name: Upload build log
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: build-log-html
         path: ./build.log
         retention-days: 1
+
+    - name: Upload HTML build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: build-output-html
+        include-hidden-files: true
+        path: ${{ inputs.build-root }}
+        retention-days: 1
+
     - name: Upload pages artifact
+      if: inputs.auto-deploy == 'true'
       uses: actions/upload-pages-artifact@v3
       with:
         path: ${{ inputs.build-root }}
+
     - name: Deploy to GitHub Pages
+      if: inputs.auto-deploy == 'true'
       id: deployment
       uses: actions/deploy-pages@v4
+
     - name: Exit
       run: |
         exitcode=${{ steps.build-html.outputs.exitcode }}
