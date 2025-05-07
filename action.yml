@@ -13,33 +13,34 @@ runs:
     - uses: actions/setup-node@v3
       with:
         node-version: 18
-    - name: Setup Pages
-      uses: actions/configure-pages@v4
     - run: npm i @diplodoc/cli -g
       shell: bash
-    - name: Build _site
+
+    - name: Build HTML
       id: build-html
       run: |
         set +e
         set -o pipefail
 
-        yfm -i ${{ inputs.src-root }} -o ${{ inputs.build-root }} | tee './build.log'
+        yfm -i ${{ inputs.src-root }} -o ${{ inputs.build-root }} | tee './build-html.log'
 
         echo "exitcode=$?" >> $GITHUB_OUTPUT
       shell: bash
+
+    - name: Upload HTML build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: static-html-output
+        path: ${{ inputs.build-root }}
+        retention-days: 1
+
     - name: Upload build log
       uses: actions/upload-artifact@v4
       with:
         name: static-build-log-html
-        path: ./build.log
+        path: ./build-html.log
         retention-days: 1
-    - name: Upload pages artifact
-      uses: actions/upload-pages-artifact@v3
-      with:
-        path: ${{ inputs.build-root }}
-    - name: Deploy to GitHub Pages
-      id: deployment
-      uses: actions/deploy-pages@v4
+
     - name: Exit
       run: |
         exitcode=${{ steps.build-html.outputs.exitcode }}
