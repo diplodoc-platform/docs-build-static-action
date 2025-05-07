@@ -1,5 +1,5 @@
 name: docs-build-static-action
-description: Build documentation
+description: Build HTML documentation
 
 inputs:
   src-root:
@@ -26,12 +26,11 @@ runs:
         yfm -i ${{ inputs.src-root }} -o ${{ inputs.build-root }} | tee './build.log'
 
         echo "exitcode=$?" >> $GITHUB_OUTPUT
-
       shell: bash
     - name: Upload build log
       uses: actions/upload-artifact@v4
       with:
-        name: build-log-html
+        name: static-build-log-html
         path: ./build.log
         retention-days: 1
     - name: Upload pages artifact
