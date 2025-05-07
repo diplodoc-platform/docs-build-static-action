@@ -1,3 +1,10 @@
+## [1.1.2](https://github.com/diplodoc-platform/docs-build-static-action/compare/v1.1.1...v1.1.2) (2025-05-07)
+
+
+### Bug Fixes
+
+* update step name ([#2](https://github.com/diplodoc-platform/docs-build-static-action/issues/2)) ([ac9b368](https://github.com/diplodoc-platform/docs-build-static-action/commit/ac9b368e48745e8e652d8380acbaa9645e93cdb9))
+
 ## [1.1.1](https://github.com/diplodoc-platform/docs-build-static-action/compare/v1.1.0...v1.1.1) (2025-05-07)
 
 
