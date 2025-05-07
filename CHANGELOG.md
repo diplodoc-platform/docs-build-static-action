@@ -1,3 +1,10 @@
+## [1.1.3](https://github.com/diplodoc-platform/docs-build-static-action/compare/v1.1.2...v1.1.3) (2025-05-07)
+
+
+### Bug Fixes
+
+* Upload HTML build artifacts ([#4](https://github.com/diplodoc-platform/docs-build-static-action/issues/4)) ([e4a2b31](https://github.com/diplodoc-platform/docs-build-static-action/commit/e4a2b314815617147b4d8bdc59cc4df37835507a))
+
 ## [1.1.2](https://github.com/diplodoc-platform/docs-build-static-action/compare/v1.1.1...v1.1.2) (2025-05-07)
 
 
