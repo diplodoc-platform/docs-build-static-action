@@ -1,3 +1,10 @@
+## [1.1.6](https://github.com/diplodoc-platform/docs-build-static-action/compare/v1.1.5...v1.1.6) (2026-05-29)
+
+
+### Bug Fixes
+
+* fixed node ([ce329f2](https://github.com/diplodoc-platform/docs-build-static-action/commit/ce329f21f7aac7863340076c00bf60ae290b525a))
+
 ## [1.1.5](https://github.com/diplodoc-platform/docs-build-static-action/compare/v1.1.4...v1.1.5) (2026-05-28)
 
 
