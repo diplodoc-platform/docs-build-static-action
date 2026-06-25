@@ -10,7 +10,7 @@ inputs:
 runs:
   using: composite
   steps:
-    - uses: actions/setup-node@v4
+    - uses: actions/setup-node@v5
       with:
         node-version: 24
     - run: npm i @diplodoc/cli -g
@@ -28,14 +28,14 @@ runs:
       shell: bash
 
     - name: Upload HTML build artifacts
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       with:
         name: static-html-output
         path: ${{ inputs.build-root }}
         retention-days: 1
 
     - name: Upload build log
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       with:
         name: static-build-log-html
         path: ./build-html.log
