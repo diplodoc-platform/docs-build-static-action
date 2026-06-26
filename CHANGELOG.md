@@ -1,3 +1,10 @@
+## [1.1.8](https://github.com/diplodoc-platform/docs-build-static-action/compare/v1.1.7...v1.1.8) (2026-06-26)
+
+
+### Bug Fixes
+
+* **ci:** update actions versions ([7e7ad7b](https://github.com/diplodoc-platform/docs-build-static-action/commit/7e7ad7b6bac45334e4335f36529327ba8d1b8a3b))
+
 ## [1.1.7](https://github.com/diplodoc-platform/docs-build-static-action/compare/v1.1.6...v1.1.7) (2026-06-25)
 
 
